@@ -33,6 +33,7 @@
 
 - [What is it?](#what-is-it)
 - [Why does it matter?](#why-does-it-matter)
+- [Why DRDO cares](#why-drdo-cares)
 - [Key results at a glance](#key-results-at-a-glance)
 - [How does it work?](#how-does-it-work)
 - [What is actually implemented? What remains?](#what-is-actually-implemented-what-remains)
@@ -67,6 +68,44 @@ insulation strength by ~40% (Paschen's law), and combines with −20 °C cold
 to slash battery capacity. Equipment qualified for the plains fails in
 Ladakh for these three coupled reasons. HIMKAVACH screens for all three
 *before* hardware is committed.
+
+## Why DRDO cares
+
+Deep-research pass, 30 Sep 2026 — every fact below carries its source;
+secondary sources are marked as such. Full citations in
+[`docs/references/REFERENCES.md`](docs/references/REFERENCES.md).
+
+- The Indian Army permanently stations troops in the High Altitude and
+  Super High Altitude Areas of Ladakh and Siachen. Winter clothing for
+  these troops is officially specified to withstand temperatures
+  **below −50 °C** (PIB, Lok Sabha reply, 3 Feb 2017) `[LITERATURE]`.
+- High-altitude troops are officially issued **electronic** aids —
+  avalanche victim detectors and trackers — and DRDO's Defence
+  Geo-Informatics Research Establishment (DGRE) operates 39 observatories
+  and automated weather stations feeding near-real-time avalanche warning
+  bulletins to them (PIB, 10 Dec 2021) `[LITERATURE]`. Electronics are
+  already part of the high-altitude system.
+- DRDO's Defence Institute of Physiology & Allied Sciences (DIPAS)
+  developed the Him-Taapak space-heating device for troops in Eastern
+  Ladakh and Siachen; the Army placed orders worth over ₹420 crore (ANI,
+  Jan 2021, quoting the DIPAS Director — secondary source)
+  `[LITERATURE]`.
+- India's military environmental standard **JSS 55555** treats
+  cold-plus-thin-air as a distinct qualification case: **Test No. 3
+  (Altitude)** covers equipment "under simultaneously applied Service
+  conditions of low air pressure and high or low temperature"; Test No. 20
+  is Low Temperature (from an unofficial copy of JSS 55555:2012 Rev. 3 —
+  the spec is a controlled document with no official free text)
+  `[LITERATURE, secondary copy]`.
+- iDEX ran a challenge (DISC-11) for −50 °C-capable tank
+  starter-generators and ultra-capacitors on the stated premise that
+  conventional batteries fail in extreme cold (secondary news; official
+  challenge page not located) `[LITERATURE, secondary]`.
+- Honesty note: we found **no verifiable public incident** of electronic
+  equipment failing specifically because of altitude, low pressure, or
+  cold. The problem statement asserts observed field effects; we treat
+  them as the qualification gap to screen for, not as documented
+  incidents.
 
 ## Key results at a glance
 

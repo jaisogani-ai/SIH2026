@@ -89,6 +89,67 @@ by these models are **[COMPUTED]**, never measured.
   The workflow rule is: **model loses every tie** — measurement overrules
   the model, and the calibration loop exists to encode that.
 
+## Literature anchors (deep-research pass, 30 Sep 2026)
+
+Cross-checks from published sources against the models above. Standards
+originals are paywalled and were read via secondary engineering
+references, flagged as such. Full URLs in
+[`docs/references/REFERENCES.md`](../references/REFERENCES.md).
+
+**Breakdown / clearance**
+- Paschen minimum for air: **327 V at pd = 0.567 torr·cm**; air constants
+  A = 112.50 (kPa·cm)⁻¹, B = 2737.50 V·(kPa·cm)⁻¹ `[LITERATURE]` (Wikipedia;
+  Jim Lux / JPL). Our implemented constants give ≈ 305 V — the robust
+  point is the floor near ~300 V.
+- IEC 60664-1 Table A.2 altitude correction factors for clearances (above
+  2,000 m): ×**1.14** at 3,000 m, ×**1.29** at 4,000 m, ×**1.48** at
+  5,000 m, ×**1.70** at 6,000 m `[LITERATURE, via ABB application note
+  quoting the table; standard paywalled]`. Worked example (TI SLUP419):
+  3.6 mm reinforced clearance → 5.33 mm at 5,000 m.
+- Correction: IPC-2221B does **not** use multiplicative altitude factors —
+  it uses separate B2/B3 altitude columns in Table 6-1. The 1.14/1.29
+  figures sometimes attributed to IPC-2221B are IEC 60664-1 values (likely
+  misattribution); this repo does not repeat it.
+- FAA AC 43-206 (official) discusses low-pressure effects on avionics
+  materials (outgassing, seal breathing) but states no explicit
+  corona-vs-altitude design rule — none found.
+
+**Thermal**
+- Textbook natural-convection correlations give h ∝ ρ^1/2 (laminar) to
+  h ∝ ρ^2/3 (turbulent) `[LITERATURE]`. Applied at 5,360 m (ρ ratio ≈
+  0.60): h ≈ 0.71–0.77 of sea level, i.e. ~23–29% lower `[ESTIMATE]`. Our
+  implemented exponent 0.8 gives a stronger derating (~43% lower) — it is
+  deliberately conservative and remains the weakest assumption in this
+  repo; E1 exists to replace it with measured data.
+- Industry practice: Flex DN025 forced-air derating 0.83 at 3,000 m /
+  0.78 at 4,000 m; ABB current correction √(ph/pn) → 0.82 at 5,000 m
+  `[LITERATURE]`.
+
+**Battery**
+- EVE LF280N 3.2 V 280 Ah LiFePO₄ manufacturer specification: discharge
+  capacity at −20 °C ≥ **70%** of typical (standard charge, 24 h rest at
+  −20 °C, 1.0C to 2.0 V cutoff); ≥ 95% at 55 °C `[LITERATURE,
+  secondary-hosted copy of the manufacturer spec]`. Our model's 80% anchor
+  at −20 °C sits within the datasheet range for Li-ion chemistries; it
+  stays per-datasheet, chemistry-specific, not universal.
+
+**Qualification standards**
+- MIL-STD-810H Method 500.6 (Low Pressure/Altitude): storage/air transport,
+  operation/air carriage, rapid decompression `[LITERATURE, secondary
+  descriptions]`; Method 502.7 (Low Temperature): storage, operation,
+  manipulation in cold-weather clothing `[LITERATURE, secondary
+  descriptions]`. A combined temperature/altitude method (520.x) also
+  exists.
+- Arrhenius acceleration: R = A·exp(−Ea/kT);
+  AF = exp[Ea/k · (1/Tuse − 1/Tstress)]; Ea ≈ 0.3–1.0 eV per mechanism,
+  **0.7 eV** conventional default when unknown (JPL; EDN; Meeker et al.)
+  `[LITERATURE]`. Used by the simulator's Life module.
+
+**Failures**
+- No verifiable public source was found attributing an electronic
+  equipment failure to high altitude, low pressure, arcing, or extreme
+  cold. Stated plainly so it is not misread as evidence.
+
 ## Reproducing every number
 
 ```bash
