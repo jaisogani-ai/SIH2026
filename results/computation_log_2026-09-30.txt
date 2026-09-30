@@ -1,0 +1,23 @@
+HIMKAVACH computation log — clean re-run 30 Sep 2026
+source: simulation/common/physics.py (github.com/jaisogani-ai/SIH2026)
+all values below are [COMPUTED] from running the team's code; no measurements exist
+======================================================================
+standard_atmosphere(5360 m): p=51.47 kPa, T=-19.84 C [COMPUTED]
+density ratio rho/rho0 at 5360 m: 0.5779 [COMPUTED]
+
+paschen_minimum(): pd=0.8375 torr-cm, Vb=305.3 V [COMPUTED]
+  (literature quotes ~327 V with other constant sets [LITERATURE] — difference disclosed)
+
+clearance_breakdown_voltage(0.8 mm gap, sea level): 4.198 kV [COMPUTED]
+clearance_breakdown_voltage(0.8 mm gap, 5360 m): 2.446 kV [COMPUTED]
+
+convection factor rho^0.8 at 5360 m: 0.645 [COMPUTED from ASSUMPTION]
+textbook rho^0.5..rho^(2/3) range: 0.760..0.694 [LITERATURE-derived computation]
+
+battery_usable_fraction(25 C): 1.000 [COMPUTED]
+battery_usable_fraction(0 C): 1.000 [COMPUTED]
+battery_usable_fraction(-20 C): 0.800 [COMPUTED]
+battery_usable_fraction(-40 C): 0.250 [COMPUTED]
+
+thermal_rise(2 W, 0.008 m2, sea level): Ts=306.835 K, rise=18.7 K [COMPUTED]
+thermal_rise(2 W, 0.008 m2, 5360 m): Ts=282.419 K, rise=29.1 K [COMPUTED]

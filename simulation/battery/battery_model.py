@@ -9,7 +9,8 @@ Run:
     python3 battery_model.py --load-a 1.5 --need-wh 12
 
 STATUS: SIMULATION. Empirical derating curve, not a measured discharge curve.
-The -20 C anchor (~80% usable) is per-datasheet [LITERATURE, chemistry-specific].
+The -20 C anchor (~80% usable) is an engineering estimate [ASSUMPTION]:
+no specific 18650 datasheet is on file (cell TBD before purchase).
 """
 
 import sys, os, argparse

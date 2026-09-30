@@ -1,6 +1,6 @@
 # HIMKAVACH
 
-**SIH26049 — DRDO · Smart India Hackathon 2026 · Team ALPHA 20**
+**SIH26049 — DRDO · Smart India Hackathon 2026 · Team ALPHA 20 · Team ID 131984**
 
 > A physics-guided reliability screening and decision-support system for
 > electrical/electronic equipment under subzero temperature and low-pressure
@@ -13,8 +13,15 @@
 ![Track](https://img.shields.io/badge/track-simulation_%2B_architecture-lightgrey)
 ![Python](https://img.shields.io/badge/Python-3.x-yellow)
 
-| [🚀 Live Demo](https://himkavach.grok.me) | [🏗 Architecture](docs/architecture/himkavach-architecture.png) | [📚 Documentation](docs/physics/README.md) | [🧪 Validation](docs/validation/VALIDATION_PLAN.md) |
-|---|---|---|---|
+| [🚀 Live Demo](https://himkavach.grok.me) | [🏗 Architecture](docs/architecture/himkavach-architecture.png) | [📘 Blueprint V9](docs/HIMKAVACH_Hardware_Blueprint_V9.pdf) | [📚 Documentation](docs/physics/README.md) | [🧪 Validation](docs/validation/VALIDATION_PLAN.md) |
+|---|---|---|---|---|
+
+> **Evidence honesty:** every number in this repo carries exactly one tag —
+> `MEASURED` · `COMPUTED` · `LITERATURE` · `ASSUMPTION` · `ESTIMATE` ·
+> `PROPOSED / FUTURE VALIDATION`. *Implemented* and *simulated* appear only as
+> plain status words, never as tags. **No PCB has been fabricated, no components
+> purchased, no physical measurements exist** — the `MEASURED` track is empty by
+> design.
 
 ## For Evaluators — the 2-minute tour
 
@@ -23,11 +30,26 @@
    margin, junction temperature and battery retention recompute, then open the
    **Report** tab for the verdict and equations.
 2. **Check the honesty (30 s):** every number on the site and in this repo
-   carries a label — `[COMPUTED]`, `[LITERATURE]`, `[ESTIMATE]`, `[ASSUMPTION]`
-   or `[SIMULATION]`. Nothing measured is claimed; the `MEASURED` column is
-   empty by design.
+   carries one evidence tag — `[COMPUTED]`, `[LITERATURE]`, `[ESTIMATE]`,
+   `[ASSUMPTION]`, or `PROPOSED / FUTURE VALIDATION`. Nothing measured is
+   claimed; the `MEASURED` column is empty by design.
 3. **Reproduce it (30 s):** one command regenerates every figure in this repo
    from code — see [Reproduce everything](#reproduce-everything).
+
+## Prototype — simulator screenshots
+
+![HIMKAVACH simulator — Mission page, Chang La preset (5,364 m, −14.4 °C), captured 30 Sep 2026](screenshots/simulator-mission-page.png)
+
+*Mission page (Chang La · Jan preset): altitude/air sliders, computed pressure,
+density and clearance cards — all badged `[COMPUTED]`. Captured 30 Sep 2026.*
+
+![HIMKAVACH simulator — Report tab verdicts, captured 30 Sep 2026](screenshots/simulator-report-verdicts.png)
+
+*Report tab: "Verdicts at the current air" — Clearance Pass (B3), Thermal Pass,
+Battery charge-blocked, Life estimate. Captured 30 Sep 2026.*
+
+**Software evidence only** — these are the web simulator, not hardware.
+Try it live: https://himkavach.grok.me
 
 ## Contents
 
@@ -35,10 +57,12 @@
 - [Why does it matter?](#why-does-it-matter)
 - [Why DRDO cares](#why-drdo-cares)
 - [Key results at a glance](#key-results-at-a-glance)
+- [Battery architecture](#battery-architecture)
 - [How does it work?](#how-does-it-work)
 - [What is actually implemented? What remains?](#what-is-actually-implemented-what-remains)
 - [The problem](#the-problem)
 - [Proposed solution](#proposed-solution)
+- [Hardware blueprint V9](#hardware-blueprint-v9)
 - [Simulation outputs](#simulation-outputs)
 - [🚀 Live Demo — HIMKAVACH Live Simulator](#-live-demo--himkavach-live-simulator)
 - [Repository map](#repository-map)
@@ -71,9 +95,9 @@ Ladakh for these three coupled reasons. HIMKAVACH screens for all three
 
 ## Why DRDO cares
 
-Deep-research pass, 30 Sep 2026 — every fact below carries its source;
-secondary sources are marked as such. Full citations in
-[`docs/references/REFERENCES.md`](docs/references/REFERENCES.md).
+Deep-research passes, 30 Sep 2026 — every fact below carries its source and a
+verification flag; full citations in [`docs/references/REFERENCES.md`](docs/references/REFERENCES.md)
+and [`docs/references/DRDO-DEEP-CONTEXT.md`](docs/references/DRDO-DEEP-CONTEXT.md).
 
 - The Indian Army permanently stations troops in the High Altitude and
   Super High Altitude Areas of Ladakh and Siachen. Winter clothing for
@@ -81,10 +105,17 @@ secondary sources are marked as such. Full citations in
   **below −50 °C** (PIB, Lok Sabha reply, 3 Feb 2017) `[LITERATURE]`.
 - High-altitude troops are officially issued **electronic** aids —
   avalanche victim detectors and trackers — and DRDO's Defence
-  Geo-Informatics Research Establishment (DGRE) operates 39 observatories
-  and automated weather stations feeding near-real-time avalanche warning
-  bulletins to them (PIB, 10 Dec 2021) `[LITERATURE]`. Electronics are
-  already part of the high-altitude system.
+  Geoinformatics Research Establishment (**DGRE**, Chandigarh) operates
+  **72 snow-met observatories and 45 automatic weather stations** (100 more
+  under testing, 203 under installation) feeding near-real-time avalanche
+  warning bulletins to them (Lok Sabha Starred Q342, 25.03.2025 — primary
+  source) `[LITERATURE]`. DGRE's sensor network is itself an exposed
+  high-altitude electronics system — the exact reliability problem this
+  project screens for.
+- Published field-failure data exists: SASE/DGRE derived **exponential
+  reliability with constant hazard rate 0.071** for AWS snow-depth sensors
+  from **2004–2012 field failure data** — the kind of reliability evidence
+  this project's measured-data track is designed to produce `[LITERATURE]`.
 - DRDO's Defence Institute of Physiology & Allied Sciences (DIPAS)
   developed the Him-Taapak space-heating device for troops in Eastern
   Ladakh and Siachen; the Army placed orders worth over ₹420 crore (ANI,
@@ -96,11 +127,19 @@ secondary sources are marked as such. Full citations in
   conditions of low air pressure and high or low temperature"; Test No. 20
   is Low Temperature (from an unofficial copy of JSS 55555:2012 Rev. 3 —
   the spec is a controlled document with no official free text)
-  `[LITERATURE, secondary copy]`.
-- iDEX ran a challenge (DISC-11) for −50 °C-capable tank
-  starter-generators and ultra-capacitors on the stated premise that
-  conventional batteries fail in extreme cold (secondary news; official
-  challenge page not located) `[LITERATURE, secondary]`.
+  `[LITERATURE, secondary copy]`. MIL-STD-810H **Method 520.5 (Combined
+  Environments)** is the combined altitude+temperature method `[LITERATURE,
+  secondary]`.
+- The single most actionable design rule: **IPC-2221B Table 6-1** demands
+  **2.5 mm creepage at sea level–3,050 m vs 12.5 mm above 3,050 m** for
+  301–500 V uncoated external conductors; **conformal coating collapses it
+  to 0.8 mm** `[LITERATURE, secondary]`. HIMKAVACH screens exactly this.
+- Precedent: **iDEX DISC-5** sought solutions for BMP-2 lead-acid battery
+  derating at high altitude; **DISC-14 + ADITI 4.0 (107 challenges)**
+  launched 19 Mar 2026 (verified live on idex.gov.in); **TDF** offers up to
+  ₹50 cr per project at 90% grant-in-aid; **IIT Roorkee's DIA-CoE** works on
+  energy storage, thermal management and snow/avalanche studies — direct
+  overlap `[LITERATURE, mixed verification — see deep-context doc]`.
 - Honesty note: we found **no verifiable public incident** of electronic
   equipment failing specifically because of altitude, low pressure, or
   cold. The problem statement asserts observed field effects; we treat
@@ -116,9 +155,20 @@ literature — see [Label legend](#label-legend).
 |---|---|---|---|
 | Air pressure | 101.3 kPa | **51.5 kPa** | `[COMPUTED]` |
 | Breakdown voltage, 0.8 mm bare gap | 4,198 V | **2,446 V** | `[COMPUTED]` (Paschen's law) |
-| Paschen minimum (air) | 327 V | 327 V | `[LITERATURE]` |
-| Usable battery capacity at −20 °C | 100% | **≈ 80%** | `[LITERATURE]` (per-datasheet, chemistry-specific) |
+| Paschen minimum (air) | 305.3 V | 305.3 V | `[COMPUTED]` repo constants; ≈327 V `[LITERATURE]` textbook figure |
+| Usable battery capacity at −20 °C | 100% | **≈ 80%** | `[ASSUMPTION]` — no datasheet on file |
 | Twin-board prototype cost | — | ≈ ₹6,700 | `[ESTIMATE]` — verify before purchase |
+
+## Battery architecture
+
+Single, consistent architecture across repo and blueprint: **2S1P 18650** ·
+**7.4 V nominal / 8.4 V max / 6.0 V cutoff** · 22.2 Wh rated (3000 mAh-class
+cells) · 2S BMS (HX-2S class) · TP5100 charger in 2S/8.4 V mode ·
+charge-lock below 0 °C.
+
+**ASSUMPTION — CELL TO BE VERIFIED BEFORE PURCHASE.** No specific 18650 cell
+has been selected; no cell datasheet is on file. Unbranded cells are excluded
+from E3 by safety rule.
 
 ## How does it work?
 
@@ -136,16 +186,14 @@ assumed model parameters with measured ones.
 physics library + 4 CLI tools (`simulation/`); risk engine; architecture
 diagram; full docs (physics, validation plan, BOM, references, roadmap).
 
-**SIMULATED** — every number and graph in this repo (all marked
-`SIMULATION`): Paschen curves, convection penalty, battery derating,
+**SIMULATED** — every number and graph in this repo (plain status word, not an
+evidence tag): Paschen curves, convection penalty, battery derating,
 clearance analysis.
 
-**CONCEPTUAL** — reference photos in `assets/conceptual/` (explicitly not
-evidence of a built prototype); hand-pump vacuum desiccator as *partial*
-low-pressure simulation.
-
-**TO BE BUILT** — twin-board ESP32 prototype (≈ ₹6,700 [ESTIMATE], BOM
-ready, nothing purchased).
+**PROPOSED** — hardware blueprint V9
+([`docs/HIMKAVACH_Hardware_Blueprint_V9.pdf`](docs/HIMKAVACH_Hardware_Blueprint_V9.pdf));
+TEST-PCB-01 layout; validation rig; experiments E1/E2/E3. Twin-board
+prototype ≈ ₹6,700 `[ESTIMATE]` — BOM ready, nothing purchased.
 
 **FUTURE VALIDATION** — E1 thermal, E2 insulation (simulation-only for
 students — safety), E3 cold battery; accredited chamber; Ladakh field
@@ -167,7 +215,7 @@ Electronics in Ladakh face three coupled stresses:
 - **Insulation/breakdown stress** — a 0.8 mm clearance rated 4.2 kV at sea
   level withstands only ~2.4 kV at Chang La [COMPUTED, Paschen's law].
 - **Cold battery conditions** — ~80% usable capacity at −20 °C
-  [LITERATURE, per-datasheet, chemistry-specific].
+  [ASSUMPTION — no datasheet on file].
 
 ## Proposed solution
 
@@ -185,24 +233,33 @@ and earns trust through the measurement loop, not through claims.
 3. **Cold-battery behaviour** — temperature derating of usable capacity and
    internal resistance for a 2S 18650 pack.
 
+## Hardware blueprint V9
+
+**[`docs/HIMKAVACH_Hardware_Blueprint_V9.pdf`](docs/HIMKAVACH_Hardware_Blueprint_V9.pdf)** —
+10-page A4 landscape engineering blueprint (Rev B, 30 Sep 2026, supersedes
+Rev A): master system architecture (D1), validation rig (D2), data
+provenance (D3), proposed test PCB (D4), simulator-vs-repo divergence
+disclosure, failure/mitigation matrix, traceability, BOM, risk register
+(incl. R-09/R-10), phased roadmap. Full red-team report:
+[`docs/HIMKAVACH_RedTeam_Report_V9.md`](docs/HIMKAVACH_RedTeam_Report_V9.md).
+
 ## Simulation outputs
 
-Every figure below is **SIMULATION** — generated by `generate_figures.py`
+Every figure below is simulation output — generated by `generate_figures.py`
 from the physics models, stamped on the figure itself. No measurements.
 
-![Paschen curve — SIMULATION](screenshots/graphs/paschen_curve.png)
+![Paschen curve — simulation output](screenshots/graphs/paschen_curve.png)
 
 *Paschen curve for air, sea level vs Chang La. The 0.8 mm operating point
 drops from 4,198 V to 2,446 V — [COMPUTED].*
 
-![Pressure and temperature vs altitude — SIMULATION](screenshots/graphs/pressure_temperature_vs_altitude.png)
+![Pressure and temperature vs altitude — simulation output](screenshots/graphs/pressure_temperature_vs_altitude.png)
 
 *Standard-atmosphere pressure and temperature vs altitude, marking Chang La
 (5,360 m, 51.5 kPa) — [COMPUTED].*
 
 More figures (thermal convection penalty, battery derating, clearance
-analysis) live in [`screenshots/graphs/`](screenshots/graphs/) — all
-marked SIMULATION.
+analysis) live in [`screenshots/graphs/`](screenshots/graphs/).
 
 ## 🚀 Live Demo — HIMKAVACH Live Simulator
 
@@ -234,27 +291,36 @@ the site. (Export/download buttons were seen but not click-tested.)
   IEC 60664-1, ISA/ICAO, IMD Leh normals, JSS 55555), **Save as PDF** and
   **CSV exports**
 - Honest labelling throughout: `[COMPUTED]` / `[LITERATURE]` /
-  `[ESTIMATE]` / `[SIMULATION]` badges and explicit disclaimers —
+  `[ESTIMATE]` / `[ASSUMPTION]` badges and explicit disclaimers —
   *"not a digital twin and not a certification."*
 
 The deployed web app's frontend source is not vendored in this repository;
 this repo holds the physics, documentation, and reproducible models behind it.
+The app's battery/thermal implementations differ in detail from `simulation/`
+(lookup-table vs linear battery curve; Theta-JA vs lumped-surface thermal) —
+both are `[COMPUTED]` screening models; do not mix the two value sets.
 
 ## Repository map
 
 ```
 README.md                      ← you are here
 docs/
+  HIMKAVACH_Hardware_Blueprint_V9.pdf  ← hardware blueprint (Rev B)
   architecture/                ← himkavach-architecture.png + .svg
   physics/                     ← equations, assumptions, limitations
   validation/                  ← VALIDATION_PLAN.md (E1/E2/E3)
   bom/                         ← BOM.md (ESTIMATE — verify before purchase)
-  references/                  ← real citations only
+  references/                  ← REFERENCES.md + DRDO-DEEP-CONTEXT.md (real citations only)
 simulation/
   common/physics.py            ← shared library (documented models)
   paschen/  thermal/  battery/  risk-engine/   ← CLI tools + examples
   requirements.txt
-screenshots/graphs/            ← generated outputs, all marked SIMULATION
+screenshots/
+  simulator-mission-page.png   ← simulator screenshot (software evidence only)
+  simulator-report-verdicts.png← simulator screenshot (software evidence only)
+  graphs/                      ← generated outputs (simulation)
+results/
+  computation_log_2026-09-30.txt ← clean re-run log
 assets/conceptual/             ← reference visuals + PHOTO_STATUS.md
 hardware/
   roadmap/                     ← staged plan, [DONE] vs [PLANNED]
@@ -272,6 +338,8 @@ python3 common/physics.py && python3 paschen/paschen_curve.py \
 cd .. && python3 generate_figures.py   # every figure in this repo
 ```
 
+Logged output: [`results/computation_log_2026-09-30.txt`](results/computation_log_2026-09-30.txt).
+
 ## Tech stack
 
 - **Models & simulation:** Python 3, NumPy, Matplotlib (`simulation/`,
@@ -288,10 +356,14 @@ cd .. && python3 generate_figures.py   # every figure in this repo
   vacuum desiccator, honestly framed.
 - No field validation in Ladakh yet.
 - The thermal model's convection exponent (0.8) is an assumption awaiting E1.
-- The battery derating curve below −20 °C is an engineering estimate awaiting E3.
+- The battery derating curve below −20 °C is an engineering estimate awaiting E3;
+  the −20 °C 80% anchor is an assumption — no cell datasheet is on file.
 - E2 (insulation) stays simulation-only: students do not build HV rigs.
 - Prototype limitations: twin-board freezer tests are relative comparisons,
   not absolute altitude qualification.
+- The deployed app's battery/thermal implementations differ in detail from
+  `simulation/`; the app's 100 Wh pack is a placeholder `[ASSUMPTION]`, not the
+  proposed 22.2 Wh hardware — do not mix the two value sets.
 - No measurements exist yet — the `MEASURED` category above is empty by design.
 
 ## Why HIMKAVACH?
@@ -306,9 +378,11 @@ before expensive chamber time is booked.
 
 ## Label legend
 
-`[LITERATURE]` published value · `[COMPUTED]` produced by `simulation/`
-code · `[ESTIMATE]` verify before acting · `[ASSUMPTION]` team modelling
-choice · `[SIMULATION]` unmeasured model output. Full definitions in
+`MEASURED` physical sensor data (empty by design) · `[COMPUTED]` produced by
+`simulation/` code · `[LITERATURE]` published value · `[ASSUMPTION]` team
+modelling choice · `[ESTIMATE]` verify before acting · `PROPOSED / FUTURE
+VALIDATION` designed but not yet built/run. *Implemented* and *simulated* are
+plain status words, never tags. Full definitions in
 [`docs/physics/README.md`](docs/physics/README.md).
 
 ## Security

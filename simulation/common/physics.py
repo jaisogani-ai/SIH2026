@@ -16,7 +16,9 @@ Model inventory
 2. paschen_breakdown_voltage(pd) ..... Vb for air gaps from Paschen's law
    Source: Paschen's law; air constants A=15 cm^-1 Torr^-1,
    B=365 V/(cm Torr), secondary emission coefficient gamma=0.01.
-   Literature value reproduced: Paschen minimum ~327 V for air.
+   With THESE constants the computed minimum is 305.3 V at
+   pd = 0.8375 Torr-cm [COMPUTED]. Textbooks commonly quote ~327 V;
+   the exact minimum depends on the (A, B, gamma) set chosen.
 3. thermal_rise(...) .................. lumped steady-state board temperature
    Physics: convection + radiation balance. Convection coefficient is
    derated with pressure as h(p) = h0 * (p/p0)^0.8  [ASSUMPTION —
@@ -110,7 +112,7 @@ def paschen_minimum():
         if best is None or v < best[1]:
             best = (pd, v)
         pd *= 1.005
-    return best  # ~ (0.57 Torr*cm, 327 V) for air
+    return best  # ~ (0.8375 Torr*cm, 305.3 V) for the A=15, B=365, gamma=0.01 constant set [COMPUTED]
 
 
 def clearance_breakdown_voltage(gap_mm, pressure_pa):
@@ -168,9 +170,10 @@ def battery_usable_fraction(temp_c):
     """Usable fraction of rated Li-ion capacity at temperature.
 
     Purpose:   estimate cold-weather energy loss for a 18650-based pack.
-    Model:     1.00 for T >= 0 C; linear decline to 0.80 at -20 C
-               (anchored to a per-datasheet literature point [LITERATURE,
-               chemistry-specific]); steeper linear decline below -20 C.
+    Model:     1.00 for T >= 0 C; linear decline to 0.80 at -20 C.
+               The -20 C anchor is an engineering estimate [ASSUMPTION]:
+               no specific 18650 datasheet is on file (cell TBD before
+               purchase). Below -20 C the curve is a steeper estimate.
     Assumptions: constant-current discharge; no self-heating credit;
                pack = 2S 18650 generic cells.
     Limitations: real derating is chemistry-, rate- and age-dependent;
