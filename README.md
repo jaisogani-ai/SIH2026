@@ -320,4 +320,4 @@ tokens, `.env` files, or credentials of any kind.
 
 *Team ALPHA 20 · SIH 2026 · Problem Statement SIH26049 (DRDO) · Round-2
 submission track: simulation + architecture. Prototype build follows the
-[roadmap](hardware/roadmap/README.md).*
+[roadmap](hardware/roadmap/README.md). Licensed under the [MIT License](LICENSE).*
