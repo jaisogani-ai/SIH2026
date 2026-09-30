@@ -102,8 +102,37 @@ and earns trust through the measurement loop, not through claims.
 
 **[▶ Open the HIMKAVACH Live Simulator](https://himkavach.grok.me)**
 
-<!-- LIVE-DEMO-FEATURES: feature inventory from the live-site audit lands here.
-     Only features confirmed present at the URL will be listed. -->
+Audited live on 30 Sep 2026 — every item below was confirmed present on
+the site. (Export/download buttons were seen but not click-tested.)
+
+- **7 modules:** Mission · Air · Clearance · Thermal · Battery · Life · Report
+- **Global inputs:** altitude (default 5,364 m) and ambient temperature
+  (default −14.4 °C) sliders; computed pressure (51.44 kPa), density, and
+  IEC clearance-factor stat cards, all badged `[COMPUTED]`
+- **8 site/month presets:** Chang La Jan / Dec / Feb / extreme (−40 °C),
+  Leh town Jan / Dec / Feb, and a sea-level lab for comparison
+- **Sea-level-vs-Ladakh comparison table** (Mission page: pressure,
+  clearance margin, junction temperature, battery retention)
+- **Clearance:** working voltage, conductor spacing, coating and
+  internal/external toggles; "Required spacing vs altitude" and Paschen
+  curve charts; PASS/FAIL margin badges
+- **Thermal:** "Tj vs altitude" and "Pmax vs altitude" charts, sensitivity
+  table, lumped board map, and mitigation buttons (lower load, better
+  package, add cooling)
+- **Battery:** "Retention vs cell temperature" chart with literature
+  anchors (the −40 °C point flagged estimate), heater/preheat controls,
+  FAIL / charge-blocked banners
+- **Life:** Arrhenius acceleration-factor chart and predicted-life estimate
+- **Report:** entries list, verdicts, before/after comparison, numbered
+  equations (1–8), verbatim assumptions, standards section (IPC-2221,
+  IEC 60664-1, ISA/ICAO, IMD Leh normals, JSS 55555), **Save as PDF** and
+  **CSV exports**
+- Honest labelling throughout: `[COMPUTED]` / `[LITERATURE]` /
+  `[ESTIMATE]` / `[SIMULATION]` badges and explicit disclaimers —
+  *"not a digital twin and not a certification."*
+
+The deployed web app's frontend source is not vendored in this repository;
+this repo holds the physics, documentation, and reproducible models behind it.
 
 ## Repository map
 
